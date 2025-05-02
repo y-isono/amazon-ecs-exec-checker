@@ -483,7 +483,27 @@ for enabled in $readonlyRootFsList; do
   idx=$((idx+1))
 done
 
-# 9. Check the task role permissions
+# 9. Check if restartPolicy is set or not (Cannot exec into the container after the container restarts)
+restartPolicyList=$(echo "${taskDefJson}" | jq -r ".taskDefinition.containerDefinitions[].restartPolicy.enabled")
+idx=0
+
+printf "${COLOR_DEFAULT}    ----------\n"
+printf "${COLOR_DEFAULT}      RestartPolicy (${taskDefFamily}:${taskDefRevision})\n"
+printf "${COLOR_DEFAULT}    ----------\n"
+
+for restartPolicy in $restartPolicyList; do
+  containerName=$(echo "${taskDefJson}" | jq -r ".taskDefinition.containerDefinitions[${idx}].name")
+  printf "         $((idx+1)). "
+  case "${restartPolicy}" in
+    *false* ) printf "${COLOR_GREEN}Disabled";;
+    *true* ) printf "${COLOR_YELLOW}Enabled";;
+    * ) printf "${COLOR_GREEN}Disabled";;
+  esac
+  printf "${COLOR_DEFAULT} - \"${containerName}\"\n"
+  idx=$((idx+1))
+done
+
+# 10. Check the task role permissions
 overriddenTaskRole=true
 taskRoleArn=$(echo "${describedTaskJson}" | jq -r ".tasks[0].overrides.taskRoleArn")
 if [[ "${taskRoleArn}" = "null" ]]; then

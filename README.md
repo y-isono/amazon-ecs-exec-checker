@@ -115,6 +115,9 @@ This check item won't block you to use ECS Exec, but we recommend you to add the
 15. **_🔴 Read-Only Root Filesystem | ReadOnly_**  
 ECS Exec uses the SSM agent as its managed agent, and the agents requires that the container file system is able to be written in order to create the required directories and files. Therefore, you need to set the `readonlyRootFilesystem` flag as `false` in your task definition to exec into the container using ECS Exec. See the "Considerations for using ECS Exec" in [the ECS official documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html#ecs-exec-considerations) for more details.
 
+16. **🟡 RestartPolicy : enabled**  
+You cannot ECS Exec into the container after restarts now.
+
 16. **_🔴 EC2 or Task Role | Not Configured"_ or _{serviceName}:{ActionName}: implicitDeny_**  
 Your ECS task needs a task role or an instance role of the underlying EC2 instance with some permissions for using SSM Session Manager at least. See the [IAM permissions required for ECS Exec](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html#ecs-exec-enabling-and-using) section and the [Enabling logging and auditing in your tasks and services](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html#ecs-exec-logging) section in the official documentation for the details.  
 Note that the `Condition` element of the IAM policy is not currently supported to evaluate by `check-ecs-exec.sh`.
