@@ -643,7 +643,7 @@ else
   fi
 fi
 
-# 10. Check existing VPC Endpoints (PrivateLinks) in the task VPC.
+# 11. Check existing VPC Endpoints (PrivateLinks) in the task VPC.
 # If there is any VPC Endpoints configured for the task VPC, we assume you would need an additional SSM PrivateLink to be configured. (yellow)
 # TODO: In the ideal world, the script should simply check if the task can reach to the internet or not :)
 requiredEndpoint="com.amazonaws.${AWS_REGION}.ssmmessages"
@@ -702,7 +702,7 @@ else
   fi
 fi
 
-# 11. Check task definition containers for environment variables AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY
+# 12. Check task definition containers for environment variables AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY
 # if AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY are defined in a container, they will be used by the SSM service
 # if the key defined does not have requirement permissions, the execute-command will not work.
 containerNameList=$(echo "${taskDefJson}" | jq -r ".taskDefinition.containerDefinitions[].name")
@@ -734,7 +734,7 @@ for containerName in $containerNameList; do
   idx=$((idx+1))
 done
 
-# 12. Check PID mode
+# 13. Check PID mode
 pidMode=$(echo "${taskDefJson}" | jq -r ".taskDefinition.pidMode")
 printf "${COLOR_DEFAULT}  PidMode                | "
 if [[ ${pidMode} = "task" ]]; then
